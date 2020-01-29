@@ -8,6 +8,8 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\entity\Effect;
+use pocketmine\entity\EffectInstance;
 
 class Main extends PluginBase implements Listener{
 
