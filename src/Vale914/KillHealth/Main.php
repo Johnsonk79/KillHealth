@@ -11,6 +11,10 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
 
+use pocketmine\utils\TextFormat;
+
+use onebone\economyapi\EconomyAPI;
+
 class Main extends PluginBase implements Listener{
 
     public function onEnable(){
@@ -29,7 +33,13 @@ class Main extends PluginBase implements Listener{
                 if(in_array($event->getPlayer()->getLevel()->getFolderName(), $this->getConfig()->get("worlds"))){
                     $damager->addEffect(new EffectInstance(Effect::getEffect(Effect::REGENERATION), 50, 2, true));
                     $damager->addEffect(new EffectInstance(Effect::getEffect(Effect::STRENGTH), 35, 1, true));
-                    $damager->sendMessage(str_replace(["{player}", "{killername}"], [$event->getPlayer()->getName(), $damager->getName()], $this->getConfig()->get("killer-message")));
+                    
+                           if(!EconomyAPI::getInstance()->addMoney($damager, 8)){
+                    $this->getLogger()->error("Failed to add money due to EconomyAPI error");
+                    return;
+                    }
+                    
+                    $damager->sendPopup(str_replace(["{player}", "{killername}"], [$event->getPlayer()->getName(), $damager->getName()], $this->getConfig()->get("killer-message")));
                     $event->setDeathMessage(str_replace(["{player}", "{killername}"], [$event->getPlayer()->getName(), $damager->getName()], $this->getConfig()->get("death-message")));
                 }
             }
